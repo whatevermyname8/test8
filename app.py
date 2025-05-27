@@ -30,7 +30,7 @@ def count_boxes():
         scores[box] += 1
 
 def end_game():
-    global game_over
+    global game_over
     time.sleep(60)
     with lock:
         count_boxes()
