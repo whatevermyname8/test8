@@ -5,7 +5,6 @@ import time
 app = Flask(__name__)
 
 # Manually define the initial board configuration (10x10)
-# You can change 'red' or 'blue' to set the starting color of each box
 board = [
     ['red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue'],
     ['blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red'],
