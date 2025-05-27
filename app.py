@@ -1,43 +1,46 @@
-from flask import Flask, render_template, jsonify, request
-import random
+from flask import Flask, render_template, request, jsonify
 import threading
+import time
 
 app = Flask(__name__)
 
-# Initialize the game board with random colors
-board = [[random.choice(['red', 'blue']) for _ in range(10)] for _ in range(10)]
-team_scores = {'red': 0, 'blue': 0}
+# Initialize the board with alternating colors
+board = [['red' if (i + j) % 2 == 0 else 'blue' for j in range(10)] for i in range(10)]
+scores = {'red': 0, 'blue': 0}
+lock = threading.Lock()
 game_over = False
+
+def count_boxes():
+    global scores
+    scores = {'red': 0, 'blue': 0}
+    for row in board:
+        for box in row:
+            scores[box] += 1
+
+def end_game():
+    global game_over
+    time.sleep(60)
+    with lock:
+        count_boxes()
+        game_over = True
+        print(f"Game Over! Red: {scores['red']} | Blue: {scores['blue']}")
 
 @app.route('/')
 def index():
-return render_template('index.html',board=board)
+    return render_template('index.html', board=board, game_over=game_over, scores=scores)
 
 @app.route('/click', methods=['POST'])
-def click():
-global board, team_scores
-if game_over:
-return jsonify({'status':'game_over'})      
+def click_box():
+    if game_over:
+        return jsonify(success=False, message="Game is over.")
+    data = request.json
+    row, col = data['row'], data['col']
+    with lock:
+        board[row][col] = 'red' if board[row][col] == 'blue' else 'blue'
+    return jsonify(success=True)
 
-data = request.json
-row = data['row']
-col = data['col']
-team = data['team']
+# Start the game timer
+threading.Thread(target=end_game, daemon=True).start()
 
-# Toggle the color of the clicked box
-board[row][col] = 'blue' if board[row][col] == 'red' else 'red'
-
-# Update team scores
-team_scores['red'] = sum(row.count('red') for row in board)
-team_scores['blue'] = sum(row.count('blue') for row in board)
-
-return jsonify({'board': board, 'team_scores': team_scores})
-
-def end_game():
-global game_over
-game_over = True
-
-# Start the timer when the app runs
-if __name__ == '__main__':]
-threading.Timer(60.0, end_game).start()
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
