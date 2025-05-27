@@ -17,7 +17,7 @@ return render_template('index.html',board=board)
 def click():
 global board, team_scores
 if game_over:
-return jsonify({'status': 'game_over'})      
+return jsonify({'status':'game_over'})      
 
 data = request.json
 row = data['row']
