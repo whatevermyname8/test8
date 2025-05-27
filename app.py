@@ -11,7 +11,7 @@ game_over = False
 
 @app.route('/')
 def index():
-    return render_template('index.html', board=board)
+return render_template('index.html',board=board)
 
 @app.route('/click', methods=['POST'])
 def click():
