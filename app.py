@@ -24,10 +24,10 @@ game_over = False
 
 def count_boxes():
     global scores
-    scores = {'red': 0, 'blue': 0}
-    for row in board:
-        for box in row:
-            scores[box] += 1
+    scores = {'red': 0, 'blue': 0}
+    for row in baord:
+        for box in row:
+            scores[box] += 1
 
 def end_game():
     global game_over
