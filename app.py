@@ -23,7 +23,7 @@ lock = threading.Lock()
 game_over = False
 
 def count_boxes():
-    global scores
+    global scores
     scores = {'red': 0, 'blue': 0}
     for row in board:
         for box in row:
