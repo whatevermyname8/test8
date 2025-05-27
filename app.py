@@ -16,28 +16,28 @@ return render_template('index.html',board=board)
 @app.route('/click', methods=['POST'])
 def click():
 global board, team_scores
-    if game_over:
-        return jsonify({'status': 'game_over'})
+if game_over:
+return jsonify({'status': 'game_over'})      
 
-    data = request.json
-    row = data['row']
-    col = data['col']
-    team = data['team']
+data = request.json
+row = data['row']
+col = data['col']
+team = data['team']
 
-    # Toggle the color of the clicked box
-    board[row][col] = 'blue' if board[row][col] == 'red' else 'red'
+# Toggle the color of the clicked box
+board[row][col] = 'blue' if board[row][col] == 'red' else 'red'
 
-    # Update team scores
-    team_scores['red'] = sum(row.count('red') for row in board)
-    team_scores['blue'] = sum(row.count('blue') for row in board)
+# Update team scores
+team_scores['red'] = sum(row.count('red') for row in board)
+team_scores['blue'] = sum(row.count('blue') for row in board)
 
-    return jsonify({'board': board, 'team_scores': team_scores})
+return jsonify({'board': board, 'team_scores': team_scores})
 
 def end_game():
-    global game_over
-    game_over = True
+global game_over
+game_over = True
 
 # Start the timer when the app runs
-if __name__ == '__main__':
-    threading.Timer(60.0, end_game).start()
-    app.run(debug=True)
+if __name__ == '__main__':]
+threading.Timer(60.0, end_game).start()
+app.run(debug=True)
