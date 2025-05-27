@@ -15,7 +15,7 @@ return render_template('index.html',board=board)
 
 @app.route('/click', methods=['POST'])
 def click():
-    global board, team_scores
+global board, team_scores
     if game_over:
         return jsonify({'status': 'game_over'})
 
