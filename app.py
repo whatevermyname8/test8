@@ -27,7 +27,7 @@ def count_boxes():
     scores = {'red': 0, 'blue': 0}
     for row in baord:
         for box in row:
-        scores[box] += 1
+            scores[box] += 1
 
 def end_game():
     global game_over
