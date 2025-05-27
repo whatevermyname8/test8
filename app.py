@@ -19,7 +19,7 @@ def count_boxes():
 
 def end_game():
     global game_over
-    time.sleep(60)
+    time.sleep(60)
     with lock:
         count_boxes()
         game_over = True
