@@ -4,8 +4,21 @@ import time
 
 app = Flask(__name__)
 
-# Initialize the board with alternating colors
-board = [['red' if (i + j) % 2 == 0 else 'blue' for j in range(10)] for i in range(10)]
+# Manually define the initial board configuration (10x10)
+# You can change 'red' or 'blue' to set the starting color of each box
+board = [
+    ['red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue'],
+    ['blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red'],
+    ['red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue'],
+    ['blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red'],
+    ['red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue'],
+    ['blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red'],
+    ['red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue'],
+    ['blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red'],
+    ['red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue'],
+    ['blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'blue', 'red']
+]
+
 scores = {'red': 0, 'blue': 0}
 lock = threading.Lock()
 game_over = False
@@ -44,6 +57,4 @@ threading.Thread(target=end_game, daemon=True).start()
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
 
