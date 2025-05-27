@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function clickBox(row, col) {
+            fetch('/click', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ row: row, col: col })
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    document.getElementById(`box-${row}-${col}`).classList.toggle('red');
+                    document.getElementById(`box-${row}-${col}`).classList.toggle('blue');
+                }
+            });
+        }
+
+        function startGame() {
+            fetch('/start_game', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Game started! You have 1 minute.');
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>Multiplayer Game</h1>
+    <button onclick="startGame()">Start Game</button>
+    <div class="board">
+        {% for row in range(10) %}
+            <div class="row">
+                {% for col in range(10) %}
+                    <div id="box-{{ row }}-{{ col }}" class="box {{ board[row][col] }}" onclick="clickBox({{ row }}, {{ col }})"></div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
