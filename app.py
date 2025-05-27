@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, jsonify, request
+import random
 import threading
-import time
 
 app = Flask(__name__)
 
-# Initialize the game board
-board = [['blue' if (i + j) % 2 == 0 else 'red' for j in range(10)] for i in range(10)]
-lock = threading.Lock()
-game_running = False
+# Initialize the game board with random colors
+board = [[random.choice(['red', 'blue']) for _ in range(10)] for _ in range(10)]
+team_scores = {'red': 0, 'blue': 0}
+game_over = False
 
 @app.route('/')
 def index():
@@ -15,29 +15,29 @@ def index():
 
 @app.route('/click', methods=['POST'])
 def click():
-    global board
+    global board, team_scores
+    if game_over:
+        return jsonify({'status': 'game_over'})
+
     data = request.json
     row = data['row']
     col = data['col']
-    with lock:
-        board[row][col] = 'red' if board[row][col] == 'blue' else 'blue'
-    return jsonify(success=True)
+    team = data['team']
 
-@app.route('/start_game', methods=['POST'])
-def start_game():
-    global game_running
-    game_running = True
-    threading.Thread(target=game_timer).start()
-    return jsonify(success=True)
+    # Toggle the color of the clicked box
+    board[row][col] = 'blue' if board[row][col] == 'red' else 'red'
 
-def game_timer():
-    global game_running
-    time.sleep(60)
-    game_running = False
-    red_count = sum(row.count('red') for row in board)
-    blue_count = sum(row.count('blue') for row in board)
-    winner = 'red' if red_count > blue_count else 'blue'
-    print(f"Game over! Red: {red_count}, Blue: {blue_count}. Winner: {winner}")
+    # Update team scores
+    team_scores['red'] = sum(row.count('red') for row in board)
+    team_scores['blue'] = sum(row.count('blue') for row in board)
 
+    return jsonify({'board': board, 'team_scores': team_scores})
+
+def end_game():
+    global game_over
+    game_over = True
+
+# Start the timer when the app runs
 if __name__ == '__main__':
+    threading.Timer(60.0, end_game).start()
     app.run(debug=True)
